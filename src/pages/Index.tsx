@@ -1,12 +1,33 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import HeroSection from "@/components/validator/HeroSection";
+import ValidatorTool from "@/components/validator/ValidatorTool";
+import HowToUseSection from "@/components/validator/HowToUseSection";
+import WhyUseSection from "@/components/validator/WhyUseSection";
+import WhatIsSection from "@/components/validator/WhatIsSection";
+import CrossSellSection from "@/components/validator/CrossSellSection";
+import FAQSection from "@/components/validator/FAQSection";
+import MoreToolsSection from "@/components/validator/MoreToolsSection";
 
 const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <HeroSection />
+      <ValidatorTool />
+      <HowToUseSection />
+      <WhyUseSection />
+      <WhatIsSection />
+      <CrossSellSection />
+      <FAQSection />
+      <MoreToolsSection />
+
+      {/* Footer */}
+      <footer className="py-8 border-t border-border">
+        <div className="container text-center text-caption text-muted-foreground">
+          © {new Date().getFullYear()} Letsmetrix. All rights reserved. |{" "}
+          <a href="https://letsmetrix.com" className="text-primary hover:underline">
+            letsmetrix.com
+          </a>
+        </div>
+      </footer>
     </div>
   );
 };
