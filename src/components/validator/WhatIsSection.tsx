@@ -18,16 +18,19 @@ const WhatIsSection = () => (
         </div>
         <div className="bg-card rounded-xl border border-border p-5 shadow-card">
           <h3 className="text-sm font-semibold text-foreground mb-3">Example llms.txt</h3>
-          <pre className="bg-muted rounded-lg p-4 text-sm font-code text-foreground overflow-x-auto whitespace-pre-wrap leading-relaxed">
-{`User-agent: ChatGPT
-Allow: /
+          <pre className="bg-muted rounded-lg p-4 text-sm font-code text-foreground overflow-x-auto whitespace-pre-wrap leading-relaxed">{`# Title
 
-User-agent: Claude
-Allow: /
+> Optional description goes here
 
-User-agent: Perplexity
-Disallow: /private/`}
-          </pre>
+Optional details go here
+
+## Section name
+
+- [Link title](https://link_url): Optional link details
+
+## Optional
+
+- [Link title](https://link_url)`}</pre>
         </div>
       </div>
     </div>
