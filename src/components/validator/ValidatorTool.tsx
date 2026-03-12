@@ -59,47 +59,30 @@ const ValidatorTool = () => {
       {
         status: "valid",
         fileUrl: `${finalUrl.replace(/\/$/, "")}/llms.txt`,
-        fileContent: `# LLMs.txt - AI Crawler Access Rules\n\nUser-agent: ChatGPT\nAllow: /\n\nUser-agent: Claude\nAllow: /\n\nUser-agent: Perplexity\nAllow: /\n\nUser-agent: Gemini\nAllow: /\n\nSitemap: ${finalUrl.replace(/\/$/, "")}/sitemap.xml`,
-        crawlers: [
-          { name: "ChatGPT", status: "allowed" },
-          { name: "Claude", status: "allowed" },
-          { name: "Perplexity", status: "allowed" },
-          { name: "Gemini", status: "allowed" },
-        ],
+        fileContent: `# ${new URL(finalUrl).hostname}\n\n> A platform for AI search optimization and analytics.\n\n## Docs\n\n- [Getting Started](${finalUrl.replace(/\/$/, "")}/docs/getting-started): Quick start guide\n- [API Reference](${finalUrl.replace(/\/$/, "")}/docs/api): Full API documentation\n\n## Blog\n\n- [AI SEO Guide](${finalUrl.replace(/\/$/, "")}/blog/ai-seo): How to optimize for AI search`,
+        crawlers: [],
         warnings: [],
       },
       {
         status: "warning",
         fileUrl: `${finalUrl.replace(/\/$/, "")}/llms.txt`,
-        fileContent: `User-agent: ChatGPT\nAllow: /\n\nUser-agent: Claude\nAllow: /`,
-        crawlers: [
-          { name: "ChatGPT", status: "allowed" },
-          { name: "Claude", status: "allowed" },
-          { name: "Perplexity", status: "blocked" },
-          { name: "Gemini", status: "blocked" },
-        ],
+        fileContent: `# ${new URL(finalUrl).hostname}\n\nSome content about the website without proper description block.`,
+        crawlers: [],
         warnings: [
-          "Missing rule for Perplexity crawler",
-          "Missing rule for Gemini crawler",
-          "No sitemap declared",
+          "No quote block description found",
+          "No section headings found",
         ],
-        fix: `User-agent: Perplexity\nAllow: /\n\nUser-agent: Gemini\nAllow: /\n\nSitemap: ${finalUrl.replace(/\/$/, "")}/sitemap.xml`,
+        fix: `# ${new URL(finalUrl).hostname}\n\n> Add a brief description of your website here.\n\n## Docs\n\n- [Page Title](${finalUrl.replace(/\/$/, "")}/page): Description of the page`,
       },
       {
         status: "error",
         fileUrl: `${finalUrl.replace(/\/$/, "")}/llms.txt`,
         fileContent: "",
-        crawlers: [
-          { name: "ChatGPT", status: "blocked" },
-          { name: "Claude", status: "blocked" },
-          { name: "Perplexity", status: "blocked" },
-          { name: "Gemini", status: "blocked" },
-        ],
+        crawlers: [],
         warnings: [
           "LLMs.txt file not found at expected location",
-          "No AI crawler rules detected",
         ],
-        fix: `# LLMs.txt - AI Crawler Access Rules\n\nUser-agent: ChatGPT\nAllow: /\n\nUser-agent: Claude\nAllow: /\n\nUser-agent: Perplexity\nAllow: /\n\nUser-agent: Gemini\nAllow: /\n\nSitemap: ${finalUrl.replace(/\/$/, "")}/sitemap.xml`,
+        fix: `# ${new URL(finalUrl).hostname}\n\n> Brief description of your website.\n\n## Docs\n\n- [Getting Started](${finalUrl.replace(/\/$/, "")}/docs/getting-started): Quick start guide\n\n## Optional\n\n- [Blog](${finalUrl.replace(/\/$/, "")}/blog): Latest articles`,
       },
     ];
 
