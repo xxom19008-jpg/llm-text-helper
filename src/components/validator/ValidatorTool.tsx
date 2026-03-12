@@ -1,10 +1,8 @@
 import { useState, useRef } from "react";
-import { Search, ChevronDown, ChevronUp, Loader2, Info } from "lucide-react";
+import { Search, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import ValidationResult from "./ValidationResult";
 
 type ValidationData = {
@@ -16,18 +14,11 @@ type ValidationData = {
   fix?: string;
 };
 
-const AI_CRAWLERS = [
-  { id: "chatgpt", label: "ChatGPT" },
-  { id: "claude", label: "Claude" },
-  { id: "perplexity", label: "Perplexity" },
-  { id: "gemini", label: "Gemini" },
-  { id: "common", label: "Common AI bots" },
-];
 
 const ValidatorTool = () => {
   const [url, setUrl] = useState("");
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [selectedCrawlers, setSelectedCrawlers] = useState<string[]>(["chatgpt", "claude", "perplexity", "gemini"]);
+  
   const [fetchMode, setFetchMode] = useState("auto");
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<ValidationData | null>(null);
@@ -95,11 +86,6 @@ const ValidatorTool = () => {
     }, 100);
   };
 
-  const toggleCrawler = (id: string) => {
-    setSelectedCrawlers((prev) =>
-      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
-    );
-  };
 
   return (
     <section className="pb-12">
@@ -146,33 +132,6 @@ const ValidatorTool = () => {
 
             {showAdvanced && (
               <div className="space-y-4 mb-6 p-4 bg-muted/50 rounded-lg border border-border">
-                {/* AI Crawlers */}
-                <div>
-                  <div className="flex items-center gap-1.5 mb-2">
-                    <label className="text-sm font-medium text-foreground">Check AI Crawlers</label>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Info className="w-3.5 h-3.5 text-muted-foreground" />
-                      </TooltipTrigger>
-                      <TooltipContent>Validate rules affecting AI crawlers</TooltipContent>
-                    </Tooltip>
-                  </div>
-                  <div className="flex flex-wrap gap-3">
-                    {AI_CRAWLERS.map((crawler) => (
-                      <label
-                        key={crawler.id}
-                        className="flex items-center gap-2 text-sm cursor-pointer"
-                      >
-                        <Checkbox
-                          checked={selectedCrawlers.includes(crawler.id)}
-                          onCheckedChange={() => toggleCrawler(crawler.id)}
-                        />
-                        {crawler.label}
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
                 {/* Fetch Mode */}
                 <div>
                   <label className="text-sm font-medium text-foreground mb-2 block">
