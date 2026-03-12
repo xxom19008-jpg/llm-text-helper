@@ -14,13 +14,6 @@ type ValidationData = {
   fix?: string;
 };
 
-const AI_CRAWLERS = [
-  { id: "chatgpt", label: "ChatGPT" },
-  { id: "claude", label: "Claude" },
-  { id: "perplexity", label: "Perplexity" },
-  { id: "gemini", label: "Gemini" },
-  { id: "common", label: "Common AI bots" },
-];
 
 const ValidatorTool = () => {
   const [url, setUrl] = useState("");
