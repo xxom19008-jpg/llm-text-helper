@@ -86,11 +86,6 @@ const ValidatorTool = () => {
     }, 100);
   };
 
-  const toggleCrawler = (id: string) => {
-    setSelectedCrawlers((prev) =>
-      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
-    );
-  };
 
   return (
     <section className="pb-12">
