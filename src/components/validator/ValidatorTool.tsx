@@ -18,7 +18,7 @@ type ValidationData = {
 const ValidatorTool = () => {
   const [url, setUrl] = useState("");
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [selectedCrawlers, setSelectedCrawlers] = useState<string[]>(["chatgpt", "claude", "perplexity", "gemini"]);
+  
   const [fetchMode, setFetchMode] = useState("auto");
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<ValidationData | null>(null);
