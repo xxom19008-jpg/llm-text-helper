@@ -3,54 +3,53 @@ import { CheckCircle2, AlertTriangle, XCircle, ExternalLink, Copy, Check } from 
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
-type CrawlerResult = { name: string; status: "allowed" | "partial" | "blocked" };
+type CheckItem = {
+  status: "pass" | "warn" | "fail";
+  message: string;
+};
 
 type ValidationData = {
   status: "valid" | "warning" | "error";
   fileUrl: string;
   fileContent: string;
-  crawlers: CrawlerResult[];
+  crawlers: { name: string; status: "allowed" | "partial" | "blocked" }[];
   warnings: string[];
   fix?: string;
+  // New fields
+  fileSize?: string;
+  score?: number;
+  checks?: CheckItem[];
 };
 
-const statusConfig = {
-  valid: {
-    icon: CheckCircle2,
-    label: "Valid LLMs.txt found",
-    bgClass: "bg-success/10",
-    textClass: "text-success",
-    borderClass: "border-success/30",
-  },
-  warning: {
-    icon: AlertTriangle,
-    label: "LLMs.txt has issues",
-    bgClass: "bg-warning/10",
-    textClass: "text-warning",
-    borderClass: "border-warning/30",
-  },
-  error: {
-    icon: XCircle,
-    label: "LLMs.txt not found",
-    bgClass: "bg-destructive/10",
-    textClass: "text-destructive",
-    borderClass: "border-destructive/30",
-  },
-};
-
-const crawlerStatusIcon = (status: string) => {
+const statusIcon = (status: "pass" | "warn" | "fail") => {
   switch (status) {
-    case "allowed": return <span className="text-success font-medium flex items-center gap-1"><Check className="w-4 h-4" /> Allowed</span>;
-    case "partial": return <span className="text-warning font-medium flex items-center gap-1"><AlertTriangle className="w-4 h-4" /> Partial</span>;
-    case "blocked": return <span className="text-destructive font-medium flex items-center gap-1"><XCircle className="w-4 h-4" /> Blocked</span>;
-    default: return null;
+    case "pass":
+      return <CheckCircle2 className="w-6 h-6 text-success shrink-0" />;
+    case "warn":
+      return <AlertTriangle className="w-6 h-6 text-warning shrink-0" />;
+    case "fail":
+      return <XCircle className="w-6 h-6 text-destructive shrink-0" />;
+  }
+};
+
+const statusBorder = (status: "pass" | "warn" | "fail") => {
+  switch (status) {
+    case "pass": return "border-l-success bg-success/5";
+    case "warn": return "border-l-warning bg-warning/5";
+    case "fail": return "border-l-destructive bg-destructive/5";
+  }
+};
+
+const statusPrefix = (status: "pass" | "warn" | "fail") => {
+  switch (status) {
+    case "pass": return "✓";
+    case "warn": return "⚠";
+    case "fail": return "✗";
   }
 };
 
 const ValidationResult = ({ data }: { data: ValidationData }) => {
   const [copied, setCopied] = useState(false);
-  const config = statusConfig[data.status];
-  const StatusIcon = config.icon;
 
   const copyFix = () => {
     if (data.fix) {
@@ -60,6 +59,12 @@ const ValidationResult = ({ data }: { data: ValidationData }) => {
     }
   };
 
+  // Build checks from data
+  const checks: CheckItem[] = data.checks || buildDefaultChecks(data);
+
+  const score = data.score ?? calculateScore(checks);
+  const fileSize = data.fileSize ?? (data.fileContent ? `${(new TextEncoder().encode(data.fileContent).length / 1024).toFixed(2)} KB` : "0 KB");
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -67,10 +72,34 @@ const ValidationResult = ({ data }: { data: ValidationData }) => {
       transition={{ duration: 0.4 }}
       className="mt-8 space-y-4"
     >
-      {/* Status Badge */}
-      <div className={`flex items-center gap-3 p-4 rounded-xl border ${config.bgClass} ${config.borderClass}`}>
-        <StatusIcon className={`w-6 h-6 ${config.textClass}`} />
-        <span className={`text-lg font-semibold ${config.textClass}`}>{config.label}</span>
+      {/* Stats Row */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="bg-card rounded-xl border border-border p-4 text-center shadow-card">
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">File Size</p>
+          <p className="text-xl font-bold text-foreground">{fileSize}</p>
+        </div>
+        <div className="bg-card rounded-xl border border-border p-4 text-center shadow-card">
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Score</p>
+          <p className="text-xl font-bold text-foreground">{score}/100</p>
+        </div>
+      </div>
+
+      {/* Validation Summary */}
+      <div className="bg-card rounded-xl border border-border p-5 shadow-card">
+        <h3 className="text-lg font-bold text-foreground mb-4">Validation Summary</h3>
+        <div className="space-y-3">
+          {checks.map((check, i) => (
+            <div
+              key={i}
+              className={`flex items-center gap-3 p-3.5 rounded-lg border-l-4 ${statusBorder(check.status)}`}
+            >
+              {statusIcon(check.status)}
+              <span className="text-sm text-foreground">
+                {statusPrefix(check.status)} {check.message}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Detected File */}
@@ -94,44 +123,6 @@ const ValidationResult = ({ data }: { data: ValidationData }) => {
         </div>
       )}
 
-      {/* Crawler Access Table */}
-      <div className="bg-card rounded-xl border border-border p-5 shadow-card">
-        <h3 className="text-sm font-semibold text-foreground mb-3">AI Crawler Access</h3>
-        <div className="overflow-hidden rounded-lg border border-border">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-muted/50">
-                <th className="text-left px-4 py-2.5 font-medium text-muted-foreground">Crawler</th>
-                <th className="text-left px-4 py-2.5 font-medium text-muted-foreground">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.crawlers.map((crawler) => (
-                <tr key={crawler.name} className="border-t border-border">
-                  <td className="px-4 py-2.5 font-medium text-foreground">{crawler.name}</td>
-                  <td className="px-4 py-2.5">{crawlerStatusIcon(crawler.status)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Warnings */}
-      {data.warnings.length > 0 && (
-        <div className="bg-card rounded-xl border border-border p-5 shadow-card">
-          <h3 className="text-sm font-semibold text-foreground mb-3">Warnings & Errors</h3>
-          <ul className="space-y-2">
-            {data.warnings.map((w, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-warning">
-                <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
-                {w}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
       {/* Recommended Fix */}
       {data.fix && (
         <div className="bg-card rounded-xl border border-primary/20 p-5 shadow-card">
@@ -152,5 +143,71 @@ const ValidationResult = ({ data }: { data: ValidationData }) => {
     </motion.div>
   );
 };
+
+function buildDefaultChecks(data: ValidationData): CheckItem[] {
+  const checks: CheckItem[] = [];
+
+  // Check 1: File found
+  if (data.status === "error") {
+    checks.push({ status: "fail", message: "LLMs.txt file not found" });
+  } else {
+    checks.push({ status: "pass", message: "Valid LLMs.txt file detected" });
+  }
+
+  // Check 2: H1 title (# Title at start)
+  if (data.fileContent && data.fileContent.startsWith("#")) {
+    checks.push({ status: "pass", message: "Title heading found (# Title)" });
+  } else if (data.fileContent) {
+    checks.push({ status: "fail", message: "Missing H1 title (use # Title at the start)" });
+  }
+
+  // Check 3: Description / quote block
+  if (data.fileContent && data.fileContent.includes(">")) {
+    checks.push({ status: "pass", message: "Quote block found with project description" });
+  } else if (data.fileContent) {
+    checks.push({ status: "warn", message: "No quote block description found (optional)" });
+  }
+
+  // Check 4: Crawler rules completeness
+  const allAllowed = data.crawlers.every((c) => c.status === "allowed");
+  const someBlocked = data.crawlers.some((c) => c.status === "blocked");
+  if (allAllowed) {
+    checks.push({ status: "pass", message: "All AI crawler rules configured correctly" });
+  } else if (someBlocked) {
+    const blocked = data.crawlers.filter((c) => c.status === "blocked").map((c) => c.name);
+    checks.push({ status: "fail", message: `Missing rules for: ${blocked.join(", ")}` });
+  } else {
+    checks.push({ status: "warn", message: "Some crawler rules have partial access" });
+  }
+
+  // Check 5: Sitemap reference
+  if (data.fileContent && /sitemap/i.test(data.fileContent)) {
+    checks.push({ status: "pass", message: "Sitemap reference found" });
+  } else if (data.fileContent) {
+    checks.push({ status: "warn", message: "No sitemap declared (optional)" });
+  }
+
+  // Check 6: File links / URLs
+  if (data.fileContent) {
+    const urlMatches = data.fileContent.match(/https?:\/\/[^\s]+/g);
+    if (urlMatches && urlMatches.length > 0) {
+      checks.push({ status: "pass", message: `URL references found: ${urlMatches.length} entries` });
+    } else {
+      checks.push({ status: "warn", message: "Limited URL references (optional)" });
+    }
+  }
+
+  return checks;
+}
+
+function calculateScore(checks: CheckItem[]): number {
+  if (checks.length === 0) return 0;
+  const points = checks.reduce((sum, c) => {
+    if (c.status === "pass") return sum + 100;
+    if (c.status === "warn") return sum + 50;
+    return sum;
+  }, 0);
+  return Math.round(points / checks.length);
+}
 
 export default ValidationResult;
