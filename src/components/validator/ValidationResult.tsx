@@ -166,32 +166,31 @@ function buildDefaultChecks(data: ValidationData): CheckItem[] {
     checks.push({ status: "warn", message: "No quote block description found (optional)" });
   }
 
-  // Check 4: Crawler rules completeness
-  const allAllowed = data.crawlers.every((c) => c.status === "allowed");
-  const someBlocked = data.crawlers.some((c) => c.status === "blocked");
-  if (allAllowed) {
-    checks.push({ status: "pass", message: "All AI crawler rules configured correctly" });
-  } else if (someBlocked) {
-    const blocked = data.crawlers.filter((c) => c.status === "blocked").map((c) => c.name);
-    checks.push({ status: "fail", message: `Missing rules for: ${blocked.join(", ")}` });
-  } else {
-    checks.push({ status: "warn", message: "Some crawler rules have partial access" });
-  }
-
-  // Check 5: Sitemap reference
+  // Check 4: Sitemap reference
   if (data.fileContent && /sitemap/i.test(data.fileContent)) {
     checks.push({ status: "pass", message: "Sitemap reference found" });
   } else if (data.fileContent) {
     checks.push({ status: "warn", message: "No sitemap declared (optional)" });
   }
 
-  // Check 6: File links / URLs
+  // Check 5: File links / URLs
   if (data.fileContent) {
-    const urlMatches = data.fileContent.match(/https?:\/\/[^\s]+/g);
-    if (urlMatches && urlMatches.length > 0) {
-      checks.push({ status: "pass", message: `URL references found: ${urlMatches.length} entries` });
+    const urlMatches = data.fileContent.match(/https?:\/\/[^\s\)]+/g);
+    const uniqueUrls = urlMatches ? [...new Set(urlMatches)] : [];
+    if (uniqueUrls.length > 0) {
+      checks.push({ status: "pass", message: `URL references found: ${uniqueUrls.length} ${uniqueUrls.length === 1 ? 'entry' : 'entries'}` });
     } else {
-      checks.push({ status: "warn", message: "Limited URL references (optional)" });
+      checks.push({ status: "warn", message: "No URL references found (optional)" });
+    }
+  }
+
+  // Check 6: Section headings (## Section)
+  if (data.fileContent) {
+    const sectionMatches = data.fileContent.match(/^## .+/gm);
+    if (sectionMatches && sectionMatches.length > 0) {
+      checks.push({ status: "pass", message: `Section headings found: ${sectionMatches.length} sections` });
+    } else {
+      checks.push({ status: "warn", message: "No section headings found (optional)" });
     }
   }
 
