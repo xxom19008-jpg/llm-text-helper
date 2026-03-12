@@ -1,10 +1,8 @@
 import { useState, useRef } from "react";
-import { Search, ChevronDown, ChevronUp, Loader2, Info } from "lucide-react";
+import { Search, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import ValidationResult from "./ValidationResult";
 
 type ValidationData = {
