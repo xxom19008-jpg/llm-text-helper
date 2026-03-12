@@ -173,22 +173,23 @@ function buildDefaultChecks(data: ValidationData): CheckItem[] {
     checks.push({ status: "warn", message: "No sitemap declared (optional)" });
   }
 
-  // Check 5: File links / URLs
+  // Check 5: Markdown link references - [text](url)
   if (data.fileContent) {
-    const urlMatches = data.fileContent.match(/https?:\/\/[^\s\)]+/g);
-    const uniqueUrls = urlMatches ? [...new Set(urlMatches)] : [];
-    if (uniqueUrls.length > 0) {
-      checks.push({ status: "pass", message: `URL references found: ${uniqueUrls.length} ${uniqueUrls.length === 1 ? 'entry' : 'entries'}` });
+    const linkMatches = data.fileContent.match(/\[([^\]]+)\]\((https?:\/\/[^\s\)]+)\)/g);
+    const linkCount = linkMatches ? linkMatches.length : 0;
+    if (linkCount > 0) {
+      checks.push({ status: "pass", message: `URL references found: ${linkCount} ${linkCount === 1 ? 'entry' : 'entries'}` });
     } else {
       checks.push({ status: "warn", message: "No URL references found (optional)" });
     }
   }
 
-  // Check 6: Section headings (## Section)
+  // Check 6: Section headings (## Section) - only count ## not ###
   if (data.fileContent) {
-    const sectionMatches = data.fileContent.match(/^## .+/gm);
-    if (sectionMatches && sectionMatches.length > 0) {
-      checks.push({ status: "pass", message: `Section headings found: ${sectionMatches.length} sections` });
+    const sectionMatches = data.fileContent.match(/^## [^#].+/gm);
+    const sectionCount = sectionMatches ? sectionMatches.length : 0;
+    if (sectionCount > 0) {
+      checks.push({ status: "pass", message: `Section headings found: ${sectionCount} ${sectionCount === 1 ? 'section' : 'sections'}` });
     } else {
       checks.push({ status: "warn", message: "No section headings found (optional)" });
     }

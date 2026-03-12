@@ -132,33 +132,6 @@ const ValidatorTool = () => {
 
             {showAdvanced && (
               <div className="space-y-4 mb-6 p-4 bg-muted/50 rounded-lg border border-border">
-                {/* AI Crawlers */}
-                <div>
-                  <div className="flex items-center gap-1.5 mb-2">
-                    <label className="text-sm font-medium text-foreground">Check AI Crawlers</label>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Info className="w-3.5 h-3.5 text-muted-foreground" />
-                      </TooltipTrigger>
-                      <TooltipContent>Validate rules affecting AI crawlers</TooltipContent>
-                    </Tooltip>
-                  </div>
-                  <div className="flex flex-wrap gap-3">
-                    {AI_CRAWLERS.map((crawler) => (
-                      <label
-                        key={crawler.id}
-                        className="flex items-center gap-2 text-sm cursor-pointer"
-                      >
-                        <Checkbox
-                          checked={selectedCrawlers.includes(crawler.id)}
-                          onCheckedChange={() => toggleCrawler(crawler.id)}
-                        />
-                        {crawler.label}
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
                 {/* Fetch Mode */}
                 <div>
                   <label className="text-sm font-medium text-foreground mb-2 block">
