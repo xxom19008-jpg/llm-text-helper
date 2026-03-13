@@ -1,42 +1,38 @@
-import { FileText, Map, Bot, Tag, Code2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-
-const tools = [
-  { icon: FileText, name: "Robots.txt Validator", desc: "Check your robots.txt file for errors and best practices." },
-  { icon: Map, name: "Sitemap Validator", desc: "Validate your XML sitemap structure and accessibility." },
-  { icon: Bot, name: "AI Crawler Checker", desc: "Detect which AI bots are crawling your website." },
-  { icon: Tag, name: "Meta Tag Analyzer", desc: "Analyze meta tags for SEO and social sharing." },
-  { icon: Code2, name: "Structured Data Validator", desc: "Test your JSON-LD and schema.org markup." },
-];
-
-const MoreToolsSection = () => (
-  <section className="py-16">
+const WhyMattersSection = () => (
+  <section className="py-16 bg-muted/30">
     <div className="container">
-      <h2 className="text-h2 text-foreground text-center mb-10">
-        More AI SEO Tools
-      </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-4xl mx-auto">
-        {tools.map((tool, i) => {
-          const Icon = tool.icon;
-          return (
-            <div
-              key={i}
-              className="bg-card rounded-xl border border-border p-5 shadow-card hover:shadow-soft transition-shadow group"
-            >
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/15 transition-colors">
-                <Icon className="w-5 h-5 text-primary" />
-              </div>
-              <h3 className="font-semibold text-foreground mb-1.5">{tool.name}</h3>
-              <p className="text-caption text-muted-foreground mb-4">{tool.desc}</p>
-              <Button variant="outline" size="sm" className="w-full">
-                Try Tool
-              </Button>
-            </div>
-          );
-        })}
+      <div className="max-w-3xl mx-auto">
+        <h2 className="text-h2 text-foreground mb-6">
+          Why LLMs.txt Matters for Your Website
+        </h2>
+        <div className="space-y-4 text-muted-foreground leading-relaxed">
+          <p>
+            As search and discovery shift from traditional search engines to AI-powered crawlers, a valid LLMs.txt file becomes essential. It communicates permissions and preferred content access directly to AI systems, improving how your pages are represented, summarized, or cited by LLMs.
+          </p>
+          <p>
+            Using our LLMs.txt Checker ensures your file remains compliant, accurate, and aligned with best practices — helping your website stand out in the AI-driven web era.
+          </p>
+        </div>
+
+        <h3 className="text-xl font-semibold text-foreground mt-8 mb-4">
+          Benefits of Regular Validation
+        </h3>
+        <ul className="space-y-2 text-muted-foreground">
+          <li className="flex gap-2"><span className="text-primary">✓</span> Improve how AI systems interpret and interact with your site</li>
+          <li className="flex gap-2"><span className="text-primary">✓</span> Prevent crawling or access errors from incorrect formatting</li>
+          <li className="flex gap-2"><span className="text-primary">✓</span> Stay compliant with the latest LLMs.txt syntax updates</li>
+          <li className="flex gap-2"><span className="text-primary">✓</span> Optimize your website for AI-based indexing and GEO</li>
+        </ul>
+
+        <p className="mt-6 text-muted-foreground leading-relaxed">
+          To learn more about the official standard, visit{" "}
+          <a href="https://llmstxt.org/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+            llmstxt.org
+          </a>.
+        </p>
       </div>
     </div>
   </section>
 );
 
-export default MoreToolsSection;
+export default WhyMattersSection;
