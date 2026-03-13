@@ -117,7 +117,9 @@ const ValidationResult = ({ data }: { data: ValidationData }) => {
             </a>
           </div>
           <p className="text-caption text-muted-foreground mb-3 font-code">{data.fileUrl}</p>
-          <pre className="bg-muted rounded-lg p-4 text-sm font-code text-foreground overflow-x-auto whitespace-pre-wrap leading-relaxed">{data.fileContent}</pre>
+          <div className="bg-muted rounded-lg p-4 text-sm font-code text-foreground overflow-x-auto leading-relaxed space-y-3">
+            {renderMarkdownPreview(data.fileContent)}
+          </div>
         </div>
       )}
 
