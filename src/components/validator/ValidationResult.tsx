@@ -145,53 +145,53 @@ const ValidationResult = ({ data }: { data: ValidationData }) => {
 function buildDefaultChecks(data: ValidationData): CheckItem[] {
   const checks: CheckItem[] = [];
 
-  // Check 1: File found
+  // Check 1: Valid Markdown format
   if (data.status === "error") {
-    checks.push({ status: "fail", message: "LLMs.txt file not found" });
+    checks.push({ status: "fail", message: "Invalid or missing Markdown format" });
   } else {
-    checks.push({ status: "pass", message: "Valid LLMs.txt file detected" });
+    checks.push({ status: "pass", message: "Valid Markdown format detected" });
   }
 
-  // Check 2: H1 title (# Title at start)
-  if (data.fileContent && data.fileContent.startsWith("#")) {
-    checks.push({ status: "pass", message: "Title heading found (# Title)" });
-  } else if (data.fileContent) {
-    checks.push({ status: "fail", message: "Missing H1 title (use # Title at the start)" });
+  // Check 2: H1 title
+  if (data.fileContent) {
+    const h1Match = data.fileContent.match(/^# (.+)/m);
+    if (h1Match) {
+      checks.push({ status: "pass", message: `H1 title found: ${h1Match[1].trim()}` });
+    } else {
+      checks.push({ status: "fail", message: "Missing H1 title (use # Title at the start)" });
+    }
   }
 
-  // Check 3: Description / quote block
-  if (data.fileContent && data.fileContent.includes(">")) {
-    checks.push({ status: "pass", message: "Quote block found with project description" });
-  } else if (data.fileContent) {
-    checks.push({ status: "warn", message: "No quote block description found (optional)" });
+  // Check 3: Quote block with project description
+  if (data.fileContent) {
+    if (data.fileContent.includes(">")) {
+      checks.push({ status: "pass", message: "Quote block found with project description" });
+    } else {
+      checks.push({ status: "warn", message: "No quote block description found (optional)" });
+    }
   }
 
-  // Check 4: Sitemap reference
-  if (data.fileContent && /sitemap/i.test(data.fileContent)) {
-    checks.push({ status: "pass", message: "Sitemap reference found" });
-  } else if (data.fileContent) {
-    checks.push({ status: "warn", message: "No sitemap declared (optional)" });
+  // Check 4: Project details (section headings ## )
+  if (data.fileContent) {
+    const sectionMatches = data.fileContent.match(/^## [^#].+/gm);
+    const sectionCount = sectionMatches ? sectionMatches.length : 0;
+    if (sectionCount >= 3) {
+      checks.push({ status: "pass", message: `Detailed project structure: ${sectionCount} sections` });
+    } else if (sectionCount > 0) {
+      checks.push({ status: "warn", message: "Limited project details (optional)" });
+    } else {
+      checks.push({ status: "warn", message: "No project details found (optional)" });
+    }
   }
 
-  // Check 5: Markdown link references - [text](url)
+  // Check 5: File lists with hyperlinks
   if (data.fileContent) {
     const linkMatches = data.fileContent.match(/\[([^\]]+)\]\((https?:\/\/[^\s\)]+)\)/g);
     const linkCount = linkMatches ? linkMatches.length : 0;
     if (linkCount > 0) {
-      checks.push({ status: "pass", message: `URL references found: ${linkCount} ${linkCount === 1 ? 'entry' : 'entries'}` });
+      checks.push({ status: "pass", message: `File lists found: ${linkCount} ${linkCount === 1 ? 'entry' : 'entries'} with hyperlinks` });
     } else {
-      checks.push({ status: "warn", message: "No URL references found (optional)" });
-    }
-  }
-
-  // Check 6: Section headings (## Section) - only count ## not ###
-  if (data.fileContent) {
-    const sectionMatches = data.fileContent.match(/^## [^#].+/gm);
-    const sectionCount = sectionMatches ? sectionMatches.length : 0;
-    if (sectionCount > 0) {
-      checks.push({ status: "pass", message: `Section headings found: ${sectionCount} ${sectionCount === 1 ? 'section' : 'sections'}` });
-    } else {
-      checks.push({ status: "warn", message: "No section headings found (optional)" });
+      checks.push({ status: "warn", message: "No file lists with hyperlinks found (optional)" });
     }
   }
 
