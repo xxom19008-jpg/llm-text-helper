@@ -1,8 +1,7 @@
 import { useState, useRef } from "react";
-import { Search, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
+import { Search, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ValidationResult from "./ValidationResult";
 
 type ValidationData = {
