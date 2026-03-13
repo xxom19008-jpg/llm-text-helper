@@ -16,9 +16,7 @@ type ValidationData = {
 
 const ValidatorTool = () => {
   const [url, setUrl] = useState("");
-  const [showAdvanced, setShowAdvanced] = useState(false);
-  
-  const [fetchMode, setFetchMode] = useState("auto");
+  const [isLoading, setIsLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<ValidationData | null>(null);
   const [error, setError] = useState("");
