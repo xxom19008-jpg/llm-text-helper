@@ -16,8 +16,6 @@ type ValidationData = {
 
 const ValidatorTool = () => {
   const [url, setUrl] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<ValidationData | null>(null);
   const [error, setError] = useState("");
   const resultRef = useRef<HTMLDivElement>(null);
