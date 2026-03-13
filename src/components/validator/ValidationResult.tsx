@@ -147,7 +147,7 @@ const ValidationResult = ({ data }: { data: ValidationData }) => {
 
       {/* Recommended Fix */}
       {data.fix && (
-        <div className="bg-card rounded-xl border border-primary/20 p-5 shadow-card">
+        <div className="bg-card rounded-xl border border-border p-5 shadow-card">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-semibold text-foreground">Recommended Fix</h3>
             <Button variant="outline" size="sm" onClick={copyFix} className="gap-1.5">
@@ -157,9 +157,7 @@ const ValidationResult = ({ data }: { data: ValidationData }) => {
           <p className="text-caption text-muted-foreground mb-3">
             Add the following rules to your llms.txt:
           </p>
-          <pre className="bg-muted rounded-lg p-4 text-sm font-code text-foreground overflow-x-auto whitespace-pre-wrap leading-relaxed">
-            {data.fix}
-          </pre>
+          <pre className="bg-[#1e1e2e] text-[#cdd6f4] rounded-lg p-4 text-sm font-code overflow-x-auto whitespace-pre-wrap leading-relaxed max-h-96 scrollbar-thin">{data.fix}</pre>
         </div>
       )}
     </motion.div>
