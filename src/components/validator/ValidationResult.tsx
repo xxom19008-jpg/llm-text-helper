@@ -48,6 +48,30 @@ const statusPrefix = (status: "pass" | "warn" | "fail") => {
   }
 };
 
+function renderMarkdownPreview(content: string) {
+  return content.split("\n").map((line, i) => {
+    const trimmed = line.trim();
+    if (!trimmed) return <div key={i} className="h-2" />;
+    if (trimmed.startsWith("# ")) return <h1 key={i} className="text-lg font-bold">{trimmed.slice(2)}</h1>;
+    if (trimmed.startsWith("## ")) return <h2 key={i} className="text-base font-semibold mt-2">{trimmed.slice(3)}</h2>;
+    if (trimmed.startsWith("> ")) return <blockquote key={i} className="text-muted-foreground italic border-l-2 border-muted-foreground/30 pl-3">{trimmed.slice(2)}</blockquote>;
+    if (trimmed.startsWith("- ")) {
+      const linkMatch = trimmed.match(/^- \[([^\]]+)\]\(([^)]+)\):?\s*(.*)/);
+      if (linkMatch) {
+        return (
+          <div key={i} className="pl-4">
+            <span>- </span>
+            <a href={linkMatch[2]} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">[{linkMatch[1]}]({linkMatch[2]})</a>
+            {linkMatch[3] && <span>: {linkMatch[3]}</span>}
+          </div>
+        );
+      }
+      return <div key={i} className="pl-4">{trimmed}</div>;
+    }
+    return <div key={i}>{trimmed}</div>;
+  });
+}
+
 const ValidationResult = ({ data }: { data: ValidationData }) => {
   const [copied, setCopied] = useState(false);
 
