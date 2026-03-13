@@ -1,23 +1,23 @@
 import HeroSection from "@/components/validator/HeroSection";
 import ValidatorTool from "@/components/validator/ValidatorTool";
-import HowToUseSection from "@/components/validator/HowToUseSection";
-import WhyUseSection from "@/components/validator/WhyUseSection";
 import WhatIsSection from "@/components/validator/WhatIsSection";
-import CrossSellSection from "@/components/validator/CrossSellSection";
-import FAQSection from "@/components/validator/FAQSection";
+import WhyUseSection from "@/components/validator/WhyUseSection";
+import HowToUseSection from "@/components/validator/HowToUseSection";
 import MoreToolsSection from "@/components/validator/MoreToolsSection";
+import FAQSection from "@/components/validator/FAQSection";
+import CrossSellSection from "@/components/validator/CrossSellSection";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <HeroSection />
       <ValidatorTool />
-      <HowToUseSection />
-      <WhyUseSection />
       <WhatIsSection />
-      <CrossSellSection />
-      <FAQSection />
+      <WhyUseSection />
+      <HowToUseSection />
       <MoreToolsSection />
+      <FAQSection />
+      <CrossSellSection />
 
       {/* Footer */}
       <footer className="py-8 border-t border-border">
