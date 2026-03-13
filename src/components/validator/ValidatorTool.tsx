@@ -13,9 +13,9 @@ type ValidationData = {
   fix?: string;
 };
 
-
 const ValidatorTool = () => {
   const [url, setUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<ValidationData | null>(null);
   const [error, setError] = useState("");
   const resultRef = useRef<HTMLDivElement>(null);
@@ -81,7 +81,6 @@ const ValidatorTool = () => {
     }, 100);
   };
 
-
   return (
     <section className="pb-12">
       <div className="container">
@@ -94,7 +93,7 @@ const ValidatorTool = () => {
             </h2>
 
             {/* URL Input */}
-            <div className="space-y-2 mb-4">
+            <div className="space-y-2 mb-6">
               <label className="text-sm font-medium text-foreground">
                 Website URL <span className="text-destructive">*</span>
               </label>
@@ -115,36 +114,6 @@ const ValidatorTool = () => {
                 </p>
               )}
             </div>
-
-            {/* Advanced Options */}
-            <button
-              onClick={() => setShowAdvanced(!showAdvanced)}
-              className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
-            >
-              {showAdvanced ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-              {showAdvanced ? "Hide" : "Show"} advanced options
-            </button>
-
-            {showAdvanced && (
-              <div className="space-y-4 mb-6 p-4 bg-muted/50 rounded-lg border border-border">
-                {/* Fetch Mode */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">
-                    Fetch Mode
-                  </label>
-                  <Select value={fetchMode} onValueChange={setFetchMode}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="auto">Auto detect</SelectItem>
-                      <SelectItem value="llms">Fetch root llms.txt</SelectItem>
-                      <SelectItem value="robots">Fetch robots.txt fallback</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            )}
 
             {/* Validate Button */}
             <Button
